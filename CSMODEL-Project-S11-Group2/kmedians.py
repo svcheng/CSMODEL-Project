@@ -24,6 +24,6 @@ class KMedians(KMeans):
 
         grouped_data = pd.concat([data, groups.rename('group')], axis=1)
 
-        centroids = grouped_data.groupby('group').median(numeric_only=False).iloc[:, self.start_var:self.end_var]
+        centroids = grouped_data.groupby('group').median(numeric_only=True).iloc[:, self.start_var:self.end_var]
 
         return centroids

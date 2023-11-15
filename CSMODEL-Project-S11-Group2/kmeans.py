@@ -60,6 +60,8 @@ class KMeans(object):
         self.centroids = pd.concat([self.centroids, point], ignore_index=True)
         sliced_data = data.iloc[:, self.start_var:self.end_var]
 
+        past_indexes = []
+
         # Step 2: Select the remaining centroids.
         for i in range(1, self.k):
 
@@ -88,7 +90,9 @@ class KMeans(object):
             # from the nearest centroid and store it to variable index.
             # Hint: Use pandas.DataFrame.min() and pandas.Series.idxmax()
             # functions.
-            index = distances.min(axis=1).idxmax()
+            index = distances.drop(past_indexes).min(axis=1).idxmax()
+
+            past_indexes.append(index)
 
             # Append the selected data point to the set of centroids.
             point = data.iloc[index, self.start_var:self.end_var]
@@ -190,7 +194,7 @@ class KMeans(object):
         # get their mean and store to variable centroids.
         # Hint: use pandas.DataFrame.groupby and
         # pandas.core.groupby.GroupBy.mean functions.
-        centroids = grouped_data.groupby('group').mean(numeric_only=False).iloc[:, self.start_var:self.end_var]
+        centroids = grouped_data.groupby('group').mean(numeric_only=True).iloc[:, self.start_var:self.end_var]
 
         return centroids
 
