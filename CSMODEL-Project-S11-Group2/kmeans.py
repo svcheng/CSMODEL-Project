@@ -101,6 +101,39 @@ class KMeans(object):
 
         return self.centroids
 
+
+    def get_sum_squared_difference(self, point1, point2):
+        """Returns the sum of the squared difference between each variable of each
+        data point. These data points can be represented as 2 Series objects. This
+        function can also compute the sum of squared difference between a list of
+        data points (represented as a DataFrame) and a single data point
+        (represented as a Series), using broadcasting.
+
+        For the arguments point1 and point2, you can only pass these
+        combinations of data types:
+        - Series and Series -- returns np.float64
+        - DataFrame and Series -- returns pd.Series
+
+        For a DataFrame and a Series, if the shape of the DataFrame is
+        (3, 2), the shape of the Series should be (2,) to enable broadcasting.
+        This operation will result to a Series of shape (3,)
+
+        Arguments:
+            point1 {Series or DataFrame} - data point
+            point2 {Series or DataFrame} - data point
+        Returns:
+            np.float64 or pd.Series -- contains the sum of squared difference
+            between the data points.
+        """
+
+        SD = (point1 - point2) ** 2
+        try:
+            SSD = SD.sum(axis=1)
+        except ValueError:
+            SSD = SD.sum()
+        return SSD.astype(np.float64)
+
+
     def get_euclidean_distance(self, point1, point2):
         """Returns the Euclidean distance between two data points. These
         data points can be represented as 2 Series objects. This function can
@@ -131,12 +164,7 @@ class KMeans(object):
 
         # TODO: Implement this function based on the documentation.
         # Hint: Use the pandas.Series.sum() and the numpy.sqrt() functions.
-        SD = (point1 - point2) ** 2
-        try:
-            SSD = SD.sum(axis=1)
-        except ValueError:
-            SSD = SD.sum()
-        return np.sqrt(SSD.astype(np.float64))
+        return np.sqrt(self.get_sum_squared_difference(point1, point2))
 
     def group_observations(self, data):
         """Returns the clusters of each data point in the dataset given
