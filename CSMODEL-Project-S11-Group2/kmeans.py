@@ -133,10 +133,10 @@ class KMeans(object):
         # Hint: Use the pandas.Series.sum() and the numpy.sqrt() functions.
         SD = (point1 - point2) ** 2
         try:
-            SSD = (SD.sum(axis=1))
+            SSD = SD.sum(axis=1)
         except ValueError:
-            SSD = (SD.sum())
-        return np.sqrt(SSD)
+            SSD = SD.sum()
+        return np.sqrt(SSD.astype(np.float64))
 
     def group_observations(self, data):
         """Returns the clusters of each data point in the dataset given
