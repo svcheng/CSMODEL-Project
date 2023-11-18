@@ -45,11 +45,6 @@ class KMedians(KMeans):
         wcss = 0
         for i in range(self.k):
             cluster_i = data.loc[groups == i]
-            #print(cluster_i)
-            #print(cluster_i[self.columns])
-            #print(self.centroids.iloc[i])
-            val = self.get_sum_squared_difference(cluster_i[self.columns], self.centroids.iloc[i]).sum()
-            #print(val)
-            wcss += val
+            wcss += self.get_sum_squared_difference(cluster_i[self.columns], self.centroids.iloc[i]).sum()
 
         return wcss

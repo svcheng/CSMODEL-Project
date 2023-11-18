@@ -276,7 +276,6 @@ class KMeans(object):
             self.centroids = centroids
 
             i += 1
-            print('Iteration', i)
-
-        print('Done clustering!')
+            
+        print(f'Finished clustering after {i} iterations.')
         return cur_groups
