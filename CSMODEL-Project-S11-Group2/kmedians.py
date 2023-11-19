@@ -1,3 +1,4 @@
+import math
 import numpy as np
 import pandas as pd
 from kmeans import KMeans
@@ -48,3 +49,27 @@ class KMedians(KMeans):
             wcss += self.get_sum_squared_difference(cluster_i[self.columns], self.centroids.iloc[i]).sum()
 
         return wcss
+
+
+    def get_silhouette_score_simplified(self, data, groups):
+        def s(i):
+            I = i['group'].astype(np.int32)
+
+            nonlocal cluster_counts
+            # If cluster only contains 1 point, return 0
+            if cluster_counts.iloc[I] == 1:
+                return 0
+
+            a_val = self.get_euclidean_distance(i, self.centroids.iloc[I])
+            b_val = self.get_euclidean_distance(i, self.centroids.drop(index=I)).min()
+
+            return (b_val - a_val) / max(a_val, b_val)
+
+        cluster_counts = groups.value_counts()
+        print(cluster_counts)
+
+        grouped_data = pd.concat([data, groups.rename('group')], axis=1)
+
+        average_score = grouped_data.apply(s, axis=1).mean()
+        print(f'Silhouette score with {self.k} clusters: {average_score}')
+        return average_score
